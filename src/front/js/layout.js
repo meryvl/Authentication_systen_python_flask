@@ -5,7 +5,7 @@ import ScrollToTop from "./component/scrollToTop";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
-import injectContext from "./store/appContext";
+import AppContextProvider from "./store/appContext";
 import Login from "./pages/Login.js";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -18,6 +18,7 @@ const Layout = () => {
 
     return (
         <div>
+            <AppContextProvider>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
@@ -31,8 +32,9 @@ const Layout = () => {
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>
+            </AppContextProvider>
         </div>
     );
 };
 
-export default injectContext(Layout);
+export default Layout;

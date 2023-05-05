@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { Context } from "../store/appContext";
+
 
 
 const CreateUser = () => {
-	const { store, actions } = useContext(Context);
+
 
 	
         const [inputUser , setInputUser]= useState([])
