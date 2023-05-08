@@ -27,7 +27,6 @@ const CreateUser = () => {
             email: inputEmail,
             userName: inputUser,
             contraseña: inputContraseña,
-            urlfoto: " https://concepto.de/wp-content/uploads/2018/10/bosque2-e1539893598295.jpg"
         }
             setUser([...user, newUser])
             console.log(newUser)

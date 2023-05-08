@@ -7,10 +7,12 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token
 
 #from models import Person
 
@@ -62,6 +64,49 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0 # avoid cache memory
     return response
+
+@app.route('/users',methods=['GET'])
+def getUsers():
+    try:
+        users = User.query.all()
+        toReturn = [users.serialize() for users in users]
+        return jsonify(toReturn), 200
+
+    except Exception:
+        return jsonify({"msg": "Ha ocurrido un error"}) , 500
+
+
+
+
+app.config["JWT_SECRET_KEY"] = "super-secret" # ¡Cambia las palabras "super-secret" por otra cosa!
+jwt = JWTManager(app)
+
+@app.route("/login", methods=["POST"])
+def create_token():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    # Consulta la base de datos por el nombre de usuario y la contraseña
+    user = User.filter.query(username=username, password=password).first()
+    return jsonify({"msg": "Bad username or password"}), 401
+    
+    # crea un nuevo token con el id de usuario dentro
+    access_token = create_access_token(identity=user.id)
+    return jsonify({ "token": access_token, "user_id": user.id })
+
+
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+
+@app.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Accede a la identidad del usuario actual con get_jwt_identity
+    current_user_id = get_jwt_identity()
+    user = User.filter.get(current_user_id)
+    
+    return jsonify({"id": user.id, "username": user.username }), 200
+
+
 
 
 # this only runs if `$ python src/main.py` is executed
