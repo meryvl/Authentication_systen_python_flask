@@ -38,7 +38,7 @@ return (
 
 <div className="bodyPage mx-5">
        
-    <form className="FormCreateUser">
+    <form>
         <div className="mb-3">
             <h2 className="">Create User</h2>
         </div>
