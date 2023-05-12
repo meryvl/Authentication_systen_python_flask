@@ -5,11 +5,11 @@ const AppContextProvider = ({ children }) => {
  const [inputEmail , setInputEmail]= useState()
 const [inputContraseña , setInputContraseña]= useState()
 
-const login = async (username, password) => {
-  const resp = await fetch(`https://your_api.com/token`, { 
+const log = async (email, password) => {
+  const resp = await fetch(`https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/login`, { 
        method: "POST",
        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ username: "joe", password: "1234" }) 
+       body: JSON.stringify({ email: email, password: password }) 
   })
 
   if(!resp.ok) throw Error("There was a problem in the login request")
@@ -29,25 +29,25 @@ const login = async (username, password) => {
 }
 
 
-const getMyTasks = await (username, password) => {
+const getMyTasks = async (email, password) => {
   // retrieve token form localStorage
   const token = localStorage.getItem('jwt-token');
 
-  const resp = await fetch(`https://your_api.com/protected`, {
+  const resp = await fetch(`https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/protected`, {
      method: 'GET',
      headers: { 
-       "Content-Type": "application/json"
+       "Content-Type": "application/json",
        "Authorization": 'Bearer '+token // ⬅⬅⬅ authorization token
      } 
   })
-  if(!resp.ok) throw Error("There was a problem in the login request")
+  if(!resp.ok){
+    throw Error("There was a problem in the login request")
+  } 
 
   else if(resp.status === 403){
       throw Error("Missing or invalid token");
   }
-  else{
-      throw Error('Uknon error');
-  }
+ 
 
   const data = await resp.json();
   console.log("This is the data you requested", data);
@@ -57,9 +57,6 @@ const getMyTasks = await (username, password) => {
 
 
 
-
-
- 
 const  store ={
  inputEmail,
  inputContraseña,
@@ -67,7 +64,8 @@ const  store ={
  setInputEmail
 }
 const actions={
-
+  getMyTasks,
+  log
 
 }
 

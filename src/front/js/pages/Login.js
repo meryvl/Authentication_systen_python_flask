@@ -12,21 +12,21 @@ const {
  setInputContraseña,
  setInputEmail
 }= store
+
+const {
+  getMyTasks,
+  log
+} =actions 
         
-        
-         
-        const login =(e)=>{
-          e.preventDefault()
-         
-          
-              
-                setInputEmail("")
-                setInputContraseña("")
-          
-        
-           
-        
-          }
+const handleSubmit=(e , email , contraseña)=>{
+  e.preventDefault()  
+  log(email , contraseña)
+  
+ 
+ setInputEmail("")
+ setInputContraseña("")       
+           }
+
 return (
 <div>
       
@@ -46,7 +46,7 @@ return (
           </div>
               <a href="#">I don't have a user</a>
             <div className=" d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary px-3 " onClick={login} >Enviar</button>
+              <button type="submit" className="btn btn-primary px-3 " onClick={(e)=>{handleSubmit(e, inputEmail, inputContraseña)} }>Enviar</button>
             </div>
           </form>
         </div>
