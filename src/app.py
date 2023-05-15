@@ -75,8 +75,23 @@ def getUsers():
     except Exception:
         return jsonify({"msg": "Ha ocurrido un error"}) , 500
 
+@app.route('/user', methods=['POST'])
+def create_user():
+    request_body = request.json
+    user_query = User.query.filter_by(email=request_body["email"]).first()
 
-
+    if user_query is None:
+        user = User(email=request_body["email"], password=request_body["password"])
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        response_body = {
+            "msg": "El usuario ha sido creado con exito",
+        }
+        return jsonify(response_body), 200
+    else:
+        return jsonify({"msg":"Usuario ya existe"}), 400
 
 app.config["JWT_SECRET_KEY"] = "super-secret" # ¡Cambia las palabras "super-secret" por otra cosa!
 jwt = JWTManager(app)
