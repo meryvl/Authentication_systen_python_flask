@@ -1,60 +1,56 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-
+import { useAppContext } from "../store/appContext";
 
 
 
 const CreateUser = () => {
 
+const {store , actions } = useAppContext();
 
-	
-  
+const {
+user
+}= store
+
         const [inputContraseña , setInputContraseña]= useState([])
         const [inputEmail , setInputEmail] = useState([])
-        const [user , setUser] = useState([])
-       
-        const getUser =()=>{
-          return(
-          fetch('https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/users/')
-          .then((res) => res.json())
-          .then((res) =>{
-            console.log("Perfect!!",res)
-                  setUser(res)
-          })
-          .catch(eror =>console.log(eror))
-        )
-      }
       
-    
-    
-    
-      const postfetch=(newUser)=>{
-      console.log(newUser)
-      return(
-      fetch('https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/user',{
-              method:'POST',
-              body:JSON.stringify(newUser),
-              headers:{
-                  "Content-Type": "application/json",
+       
+        const registrarse = async (email, password) => {
+          const resp = await fetch(
+              `https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/user`,
+              {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password}),
               }
-          })
-      .then(() =>{
-        getUser()
-              
-      })
-      .catch(eror =>console.log(eror)))
-    }
+          );
         
+          if (!resp.ok) throw Error("There was a problem in the login request");
+        
+          if (resp.status === 401) {
+              throw "Invalid credentials";
+          } else if (resp.status === 400) {
+              throw "Invalid email or password format";
+          }
+        
+          const data = await resp.json();
+        
+          return data;
+        };
+        
+        
+    
+    
+    
+
         
          
-        const hanledCreateNewUser=(e)=>{
+        const hanledCreateNewUser=(e , email , password)=>{
           e.preventDefault()
-        const newUser ={
-            email: inputEmail,
-            contraseña: inputContraseña,
-        }
-        postfetch([...user, newUser])
-            console.log(newUser)
+          registrarse(email , password)
+       
+          
            
         
           }
@@ -78,7 +74,7 @@ return (
           </div>
 
             <div className=" d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary px-3 " onClick={hanledCreateNewUser} >Enviar</button>
+              <button type="submit" className="btn btn-primary px-3 " onClick={(e)=>{hanledCreateNewUser(e ,inputEmail , inputContraseña)}} >Enviar</button>
             </div>
           
           

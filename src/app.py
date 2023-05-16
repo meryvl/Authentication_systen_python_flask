@@ -66,11 +66,15 @@ def serve_any_other_file(path):
     return response
 
 @app.route('/users',methods=['GET'])
-def getUsers():
+def user():
     try:
-        users = User.query.all()
-        toReturn = [users.serialize() for users in users]
-        return jsonify(toReturn), 200
+
+        query = db.select(User).order_by(User.id)
+        users = db.session.execute(query).scalars()
+
+        user_list = [user.serialize() for user in users]
+
+        return {"code": 200, "msg": "Usuarios existentes obtenidos", "users": user_list}
 
     except Exception:
         return jsonify({"msg": "Ha ocurrido un error"}) , 500
@@ -87,11 +91,11 @@ def create_user():
         db.session.commit()
         
         response_body = {
-            "msg": "El usuario ha sido creado con exito",
+            "msg": "Usuario creado",
         }
         return jsonify(response_body), 200
     else:
-        return jsonify({"msg":"Usuario ya existe"}), 400
+        return jsonify({"msg":"Ya existe este usuario"}), 400
 
 app.config["JWT_SECRET_KEY"] = "super-secret" # ¡Cambia las palabras "super-secret" por otra cosa!
 jwt = JWTManager(app)

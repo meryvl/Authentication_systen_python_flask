@@ -4,6 +4,7 @@ const AppContext = createContext();
 const AppContextProvider = ({ children }) => {
  const [inputEmail , setInputEmail]= useState()
 const [inputContraseña , setInputContraseña]= useState()
+const [user , setUser] = useState([])
 
 const log = async (email, password) => {
   const resp = await fetch(`https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/login`, { 
@@ -27,6 +28,7 @@ const log = async (email, password) => {
 
   return data
 }
+
 
 
 const getMyTasks = async (email, password) => {
@@ -61,11 +63,13 @@ const  store ={
  inputEmail,
  inputContraseña,
  setInputContraseña,
- setInputEmail
+ setInputEmail,
+ user
 }
 const actions={
   getMyTasks,
-  log
+  log,
+  
 
 }
 
