@@ -11,7 +11,6 @@ const {
  inputContraseña,
  setInputContraseña,
  setInputEmail,
- user, 
  setUser
 }= store
 

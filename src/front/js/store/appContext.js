@@ -5,7 +5,8 @@ const AppContextProvider = ({ children }) => {
  const [inputEmail , setInputEmail]= useState()
 const [inputContraseña , setInputContraseña]= useState()
 const [user , setUser] = useState([])
-
+const [email , setEmail]  = useState()
+const [password , setPassword] =useState()
 const log = async (email, password) => {
   const resp = await fetch(`https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/login`, { 
        method: "POST",
@@ -57,6 +58,28 @@ const getMyTasks = async (email, password) => {
 
 }
 
+const register = async (email, password) => {
+  const resp = await fetch(
+      `https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/signup`,
+      {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password}),
+      }
+  );
+
+  if (!resp.ok) throw Error("There was a problem in the login request");
+
+  if (resp.status === 401) {
+      throw "Invalid credentials";
+  } else if (resp.status === 400) {
+      throw "Invalid email or password format";
+  }
+
+  const data = await resp.json();
+
+  return data;
+};
 
 
 
@@ -92,7 +115,11 @@ const  store ={
  setInputContraseña,
  setInputEmail,
  user,
- setUser
+ setUser,
+ email,
+ password,
+ setEmail,
+ setPassword
 }
 const actions={
   getMyTasks,
