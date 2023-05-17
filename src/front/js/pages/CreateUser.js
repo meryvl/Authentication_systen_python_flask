@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+
 import { useAppContext } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 
 
 const CreateUser = () => {
-
+const navigate = useNavigate();
 const {store , actions } = useAppContext();
-
-const {
-user
-}= store
-
         const [inputContraseña , setInputContraseña]= useState([])
         const [inputEmail , setInputEmail] = useState([])
       
        
-        const registrarse = async (email, password) => {
+    
+        const register = async (email, password) => {
           const resp = await fetch(
-              `https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/user`,
+              `https://3001-meryvl-authenticationsy-xqz8br0syug.ws-eu97.gitpod.io/signup`,
               {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -39,18 +36,17 @@ user
           return data;
         };
         
-        
-    
-    
     
 
         
          
         const hanledCreateNewUser=(e , email , password)=>{
-          e.preventDefault()
-          registrarse(email , password)
-       
-          
+          e.preventDefault();
+          register(email, password)
+          actions.handleSubmitRegister(e);
+      
+          navigate("/login")
+      
            
         
           }

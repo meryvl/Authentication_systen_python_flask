@@ -59,17 +59,47 @@ const getMyTasks = async (email, password) => {
 
 
 
+
+const handleSubmitRegister = (e) => {
+  e.preventDefault();
+
+  register(email, password);
+};
+
+
+
+useEffect(() => {
+
+  if (!sessionStorage.getItem("jwt-token")) return
+
+  getMyTasks()
+    .then((data) => {
+      setUsuario({token: data.token, user: data.user});
+    });
+
+},[]);
+
+const handleLogOut = () => {
+  sessionStorage.removeItem("jwt-token");
+  setUsuario({ token: "", user: "" });
+};
+
+
+
 const  store ={
  inputEmail,
  inputContraseña,
  setInputContraseña,
  setInputEmail,
- user
+ user,
+ setUser
 }
 const actions={
   getMyTasks,
   log,
-  
+  handleSubmitRegister,
+  handleLogOut
+
 
 }
 

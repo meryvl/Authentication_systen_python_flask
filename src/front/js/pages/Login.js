@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useAppContext } from "../store/appContext";
-
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
@@ -10,19 +10,38 @@ const {
  inputEmail,
  inputContraseña,
  setInputContraseña,
- setInputEmail
+ setInputEmail,
+ user, 
+ setUser
 }= store
 
 const {
-  getMyTasks,
   log,
+ 
 } =actions 
         
+const navigate = useNavigate();
+
+const handleSubmitLogIn = (e , email , password) => {
+  e.preventDefault();
+
+  return (    
+    log(email, password)
+  .then((data) => {
+    setUser({token: data.token, user: data.user});
+  }));
+
+};
+
+
+
+
 const handleSubmit=(e , email , contraseña)=>{
   e.preventDefault()  
   log(email , contraseña)
  
-  
+  handleSubmitLogIn(e, email , password)
+  .then(() => {navigate("/protected")})
  
  setInputEmail("")
  setInputContraseña("")       
